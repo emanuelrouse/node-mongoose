@@ -13,13 +13,10 @@ const connect = mongoose.connect(url, {
 connect.then(() => {
     console.log('Connected correctly to server');
     // Create a new document based on the mongoose model named campsite
-    const newCampsite = new Campsite({
+    Campsite.create({
         name: 'React Lake Campground',
         description: 'test'
-    });
-
-    // Save that document that automatically saves to the campsite collection 
-    newCampsite.save()
+    })
         .then(campsite => {
             console.log(campsite);
             return Campsite.find();
