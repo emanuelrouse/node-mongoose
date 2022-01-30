@@ -6,6 +6,7 @@ const url = 'mongodb://localhost:27017/nucampsite';
 const connect = mongoose.connect(url, {
     // Used to stop deprication warnings
     useCreateIndex: true,
+    useFindAndModify: false,
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
@@ -19,11 +20,27 @@ connect.then(() => {
     })
         .then(campsite => {
             console.log(campsite);
-            return Campsite.find();
+
+            return Campsite.findByIdAndUpdate(campsite._id, {
+                $set: { description: 'Updated Test Document' }
+            }, {
+                new: true
+            });
         })
-        .then(campsites => {
+        .then(campsite => {
+            console.log(campsite);
+
+            campsite.comments.push({
+                rating: 5,
+                text: 'What a magnificent view!',
+                author: 'Tinus Lorvaldes'
+            });
+
+            return campsite.save();
+        })
+        .then(campsite => {
             // Log React Lake Campground Document as an array
-            console.log(campsites);
+            console.log(campsite);
             // Delete all the documents created from the campsite document
             return Campsite.deleteMany({});
         })
